@@ -1,29 +1,112 @@
 <!DOCTYPE html>
-<html   超文本标记语言   超文本标记语言    < html   超文本标记语言   超文本标记语言 lang   朗   朗 = "应用" >lang="zh-CN">
-<head   头   头>
-    <meta   元   元 charset   字符集   字符集="UTF-8"   “utf - 8”   “utf - 8”>
-    <meta   元   元 name   名字   名字="viewport"   “视口”   “视口” content   内容   内容="width=device-width, initial-scale=1.0"宽度=设备宽度，初始缩放比例=1.0宽度=设备宽度，初始缩放比例=1.0>
-    <title   标题   标题>跨域页面展示</title   标题   标题>
-       < >风格<style   风格   风格>
-           主体，HTML {body   身体   身体, html   超文本标记语言   超文本标记语言 {
-               保证金:0;margin   保证金   保证金: 0;
-               填充:0;padding   填充   填充: 0;
-               高度:100%;height   高度   高度: 100%;
-               宽度:100%;width   宽度   宽度: 100%;
-               溢出:隐藏;overflow   溢出   溢出: hidden   隐藏的   隐藏的;
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>页面加载中...</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-           iframe——iframe {
-               位置:绝对的;position   位置   位置: absolute   绝对   绝对;
-               上图:0;top   前   前: 0;
-               左:0;left   左   左: 0;
-               宽度:100%;width   宽度   宽度: 100%;
-               高度:100%;height   高度   高度: 100%;
-               边界:没有;border   边境   边境: none   没有一个   没有一个;
+        body, html {
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
-       > < /风格</style   风格>
-</head   头   头   头>
-<body   身体   身体>
-    <!-- 在这里修改你要打开的另一个域名的URL -->
-    <iframe src="https//baodu.com" allow   允许   允许="fullscreen"   “全屏”   “全屏”></iframe>
-</body   身体   身体>
-</html   超文本标记语言   超文本标记语言   超文本标记语言>
+        #frame-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: #f5f5f5;
+        }
+        #loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: #fff;
+            z-index: 100;
+        }
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top-color: #09f;
+            animation: spin 1s ease-in-out infinite;
+            margin-bottom: 15px;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        #error {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            color: #ff4444;
+        }
+    </style>
+</head>
+<body>
+    <div id="loading">
+        <div class="spinner"></div>
+        <div>页面加载中...</div>
+    </div>
+
+    <div id="error">
+        <h3>加载失败</h3>
+        <p id="error-message"></p>
+        <button onclick="location.reload()">重新加载</button>
+    </div>
+
+    <div id="frame-container">
+        <!-- 在这里修改你要打开的另一个域名的URL -->
+        <iframe 
+            src="https://example.com" 
+            allow="fullscreen"
+            onload="hideLoader()"
+            onerror="showError('无法加载页面')"
+            sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
+        ></iframe>
+    </div>
+
+    <script>
+        function hideLoader() {
+            document.getElementById('loading').style.display = 'none';
+        }
+        
+        function showError(message) {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('error').style.display = 'block';
+            document.getElementById('error-message').textContent = message;
+        }
+        
+        // 防止某些网站检测到被iframe嵌入
+        window.addEventListener('DOMContentLoaded', function() {
+            try {
+                document.title = "加载中...";
+                // 尝试移除iframe的referrer信息（不一定生效）
+                const iframe = document.querySelector('iframe');
+                iframe.setAttribute('referrerpolicy', 'no-referrer');
+            } catch(e) {
+                console.log(e);
+            }
+        });
+    </script>
+</body>
+</html>
