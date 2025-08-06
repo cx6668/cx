@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh-CN">   < html lang = "应用" >
+<head>   < >负责人
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>防洪系统 - 查看链接</title>
+    <style>   < >风格
+        body {   身体{
+            font-family: Arial, sans-serif;字体族：Arial，无衬线字体；
+            margin: 0;
+            padding: 0;
+            display: flex;   显示:flex;
+            height: 100vh;
+        }
+        #sidebar {
+            width: 250px;
+            background-color: #f0f0f0;
+            padding: 10px;   填充:10 px;
+            overflow-y: auto;
+        }
+        #content {
+            flex: 1;
+            display: flex;   显示:flex;
+            flex-direction: column;
+        }
+        #iframe-container {
+            flex: 1;
+            position: relative;
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;   边界:没有;
+        }
+        .link-item {
+            padding: 8px;   填充:8 px;
+            margin: 5px 0;   Margin: 5px 0；
+            background-color: white;   背景颜色：白色；
+            border-radius: 3px;
+            cursor: pointer;   光标:指针;
+        }
+        .link-item:hover {
+            background-color: #e0e0e0;
+        }
+        h2 {
+            margin-top: 0;
+            padding: 10px;   填充:10 px;
+            background-color: #4CAF50;背景颜色：#4CAF50
+            color: white;   颜色:白色;
+        }
+        #header {
+            background-color: #333;
+            color: white;   颜色:白色;
+            padding: 10px;   填充:10 px;
+            display: flex;   显示:flex;
+            justify-content: space-between;主轴对齐方式：两端对齐；
+            align-items: center;
+        }
+        #back-btn {
+            background-color: #f44336;背景颜色：#f44336
+            color: white;   颜色:白色;
+            border: none;   边界:没有;
+            padding: 5px 10px;
+            cursor: pointer;   光标:指针;
+        }
+    </style>   > < /风格
+</head>
+<body>   身体< >
+    <div id="sidebar">
+        <h2>链接列表</h2>
+        <div id="linkList">
+            <!-- 链接将在这里动态加载 -->
+        </div>
+    </div>
+    
+    <div id="content">
+        <div id="header">   < div id = "头" >
+            <span id="current-site">请从左侧选择链接</span>
+            <button id="back-btn" onclick="window.location.href='index.html'">返回管理</button>
+        </div>
+        <div id="iframe-container">
+            <iframe id="contentFrame" src="about:blank"></iframe>
+        </div>
+    </div>
+
+    <script>
+        // 加载保存的链接
+        window.onload = function() {窗口。window.onload = function() {
+            loadLinks();
+        };
+
+        // 从links.txt加载链接
+        function loadLinks() {   function loadLinks() {  函数 loadLinks() {
+            fetch('links.txt')   fetch(“links.txt”)
+                .then(response => response.text())然后对响应进行处理，获取其文本内容。
+                .then(data => {   .then（data => {）
+                    const links = data.split('\n').filter(link => link.trim() !== '');const   常量 links = data.split   分裂('\n').filter(link => link.trim() !== '')； 
+
+const links = data.split('\n').filter(link => link.trim() !== '');  // 将 data 按换
+                    const linkList = document.getElementById('linkList');const   常量 linkList = document.getElementById('linkList')；
+                    linkList.innerHTML = '';
+                    
+                    links.forEach(link => {   links.forEach(link => {  这段代码是 JavaScript 语言中的一种语法结构，用于
+                        const [name, url] = link.split('|');const   常量 [name   名字, url] = link.split   分裂('|')；
+// 翻译为：
+const [名称， 网址] = 链接
+                        if (name && url) {   If (name   名字 && url) {
+                            const linkItem = document.createElement('div');
+                            linkItem.className = 'link-item';
+                            linkItem.textContent = name;
+                            linkItem.onclick = function() {
+                                document.getElementById('contentFrame').src = url;
+                                document.getElementById('current-site').textContent = name;
+                            };
+                            linkList.appendChild(linkItem);
+                        }
+                    });
+                })
+                .catch(error => {   .catch（error => {）
+                    console.error('加载链接时出错:', error);
+                    alert('加载链接时出错，请确保links.txt文件存在');
+                });
+        }
+    </script>   > < /脚本
+</body>
+    </html>
